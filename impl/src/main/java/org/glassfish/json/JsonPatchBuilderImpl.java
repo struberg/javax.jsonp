@@ -38,43 +38,52 @@
  * holder.
  */
 
-package javax.json;
+package org.glassfish.json;
 
-/**
- * A builder for constructing a JSON Patch by adding
- * JSON Patch operations incrementally.
- * <p>
- * The following illustrates the approach.
- * <pre>
- *   JsonPatchBuilder builder = new JsonPatchBuilder();
- *   JsonArray patch = builder.add("/John/phones/office", "1234-567")
- *                            .remove("/Amy/age")
- *                            .build();
- * </pre>
- * The result is equivalent to the following JSON Patch.
- * <pre>
- * [
- *   ;"op" = "add", "path" = "/John/phones/office", "value" = "1234-567"},
- *   ;"op" = "remove", "path" = "/Amy/age"}
- * ] </pre>
- * 
- * @since 1.1
- */
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonException;
+import javax.json.JsonObject;
+import javax.json.JsonPatch;
+import javax.json.JsonPatchBuilder;
+import javax.json.JsonStructure;
+import javax.json.JsonValue;
 
-public interface JsonPatchBuilder {
+public final class JsonPatchBuilderImpl implements JsonPatchBuilder {
+
+    private JsonArrayBuilder builder;
 
     /**
-     * A convenience method for;@code new JsonPatch(build()).apply(target) }
+     * Creates a JsonPatchBuilder, starting with the specified
+     * JSON Patch
+     * @param patch the JSON Patch
+     */
+    public JsonPatchBuilderImpl(JsonArray patch) {
+        builder = Json.createArrayBuilder(patch);
+    }
+
+    /**
+     * Creates JsonPatchBuilder with empty JSON Patch
+     */
+    public JsonPatchBuilderImpl() {
+        builder = Json.createArrayBuilder();
+    }
+
+    /**
+     * A convenience method for {@code new JsonPatch(build()).apply(target) }
      *
      * @param target the target to apply the patch operations
      * @return the transformed target after the patch
      * @throws JsonException if the supplied JSON Patch is malformed or if
      *    it contains references to non-existing members
      */
-    JsonStructure apply(JsonStructure target);
+    public JsonStructure apply(JsonStructure target) {
+        return build().apply(target);
+    }
 
     /**
-     * A convenience method for;@code build().apply(target) }
+     * A convenience method for {@code build().apply(target) }
      *
      * @param target the target to apply the patch operations
      * @return the transformed target after the patch
@@ -82,10 +91,12 @@ public interface JsonPatchBuilder {
      *    it contains references to non-existing members
      * @see #apply(JsonStructure)
      */
-    JsonObject apply(JsonObject target);
+    public JsonObject apply(JsonObject target) {
+        return build().apply(target);
+    }
 
     /**
-     * A convenience method for;@code build().apply(target) }
+     * A convenience method for {@code build().apply(target) }
      *
      * @param target the target to apply the patch operations
      * @return the transformed target after the patch
@@ -93,7 +104,9 @@ public interface JsonPatchBuilder {
      *    it contains references to non-existing members
      * @see #apply(JsonStructure)
      */
-    JsonArray apply(JsonArray target);
+    public JsonArray apply(JsonArray target) {
+        return build().apply(target);
+    }
 
     /**
      * Adds an "add" JSON Patch operation.
@@ -101,7 +114,14 @@ public interface JsonPatchBuilder {
      * @param value the "value" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder add(String path, JsonValue value);
+    public JsonPatchBuilderImpl add(String path, JsonValue value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "add")
+                           .add("path", path)
+                           .add("value", value)
+                   );
+        return this;
+    }
 
     /**
      * Adds an "add" JSON Patch operation
@@ -109,7 +129,14 @@ public interface JsonPatchBuilder {
      * @param value the "value" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder add(String path, String value);
+    public JsonPatchBuilderImpl add(String path, String value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "add")
+                           .add("path", path)
+                           .add("value", value)
+                   );
+        return this;
+    }
 
     /**
      * Adds an "add" JSON Patch operation
@@ -117,7 +144,14 @@ public interface JsonPatchBuilder {
      * @param value the "value" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder add(String path, int value);
+    public JsonPatchBuilderImpl add(String path, int value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "add")
+                           .add("path", path)
+                           .add("value", value)
+                  );
+        return this;
+    }
 
     /**
      * Adds an "add" JSON Patch operation
@@ -125,14 +159,27 @@ public interface JsonPatchBuilder {
      * @param value the "value" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder add(String path, boolean value);
+    public JsonPatchBuilderImpl add(String path, boolean value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "add")
+                           .add("path", path)
+                           .add("value", value)
+                   );
+        return this;
+    }
 
     /**
      * Adds a "remove" JSON Patch operation.
      * @param path the "path" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder remove(String path);
+    public JsonPatchBuilderImpl remove(String path) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "remove")
+                           .add("path", path)
+                    );
+        return this;
+    }
 
     /**
      * Adds a "replace" JSON Patch operation.
@@ -140,7 +187,14 @@ public interface JsonPatchBuilder {
      * @param value the "value" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder replace(String path, JsonValue value);
+    public JsonPatchBuilderImpl replace(String path, JsonValue value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "replace")
+                           .add("path", path)
+                           .add("value", value)
+                  );
+        return this;
+    }
 
     /**
      * Adds a "replace" JSON Patch operation.
@@ -148,7 +202,14 @@ public interface JsonPatchBuilder {
      * @param value the "value" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder replace(String path, String value);
+    public JsonPatchBuilderImpl replace(String path, String value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "replace")
+                           .add("path", path)
+                           .add("value", value)
+                  );
+        return this;
+    }
 
     /**
      * Adds a "replace" JSON Patch operation.
@@ -156,7 +217,14 @@ public interface JsonPatchBuilder {
      * @param value the "value" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder replace(String path, int value);
+    public JsonPatchBuilderImpl replace(String path, int value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "replace")
+                           .add("path", path)
+                           .add("value", value)
+                  );
+        return this;
+    }
 
     /**
      * Adds a "replace" JSON Patch operation.
@@ -164,7 +232,14 @@ public interface JsonPatchBuilder {
      * @param value the "value" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder replace(String path, boolean value);
+    public JsonPatchBuilderImpl replace(String path, boolean value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "replace")
+                           .add("path", path)
+                           .add("value", value)
+                  );
+        return this;
+    }
 
     /**
      * Adds a "move" JSON Patch operation.
@@ -172,15 +247,44 @@ public interface JsonPatchBuilder {
      * @param from the "from" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder move(String path, String from);
-
+    public JsonPatchBuilderImpl move(String path, String from) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "move")
+                           .add("path", path)
+                           .add("from", from)
+                  );
+        return this;
+    }
+ 
     /**
      * Adds a "copy" JSON Patch operation.
      * @param path the "path" member of the operation
      * @param from the "from" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder copy(String path, String from);
+    public JsonPatchBuilderImpl copy(String path, String from) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "copy")
+                           .add("path", path)
+                           .add("from", from)
+                  );
+        return this;
+    }
+ 
+    /**
+     * Adds a "test" JSON Patch operation.
+     * @param path the "path" member of the operation
+     * @param value the "value" member of the operation
+     * @return this JsonPatch
+     */
+    public JsonPatchBuilderImpl test(String path, JsonValue value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "test")
+                           .add("path", path)
+                           .add("value", value)
+                  );
+        return this;
+    }
 
     /**
      * Adds a "test" JSON Patch operation.
@@ -188,7 +292,14 @@ public interface JsonPatchBuilder {
      * @param value the "value" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder test(String path, JsonValue value);
+    public JsonPatchBuilderImpl test(String path, String value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "test")
+                           .add("path", path)
+                           .add("value", value)
+                  );
+        return this;
+    }
 
     /**
      * Adds a "test" JSON Patch operation.
@@ -196,7 +307,14 @@ public interface JsonPatchBuilder {
      * @param value the "value" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder test(String path, String value);
+    public JsonPatchBuilderImpl test(String path, int value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "test")
+                           .add("path", path)
+                           .add("value", value)
+                  );
+        return this;
+    }
 
     /**
      * Adds a "test" JSON Patch operation.
@@ -204,26 +322,29 @@ public interface JsonPatchBuilder {
      * @param value the "value" member of the operation
      * @return this JsonPatch
      */
-    JsonPatchBuilder test(String path, int value);
-
-    /**
-     * Adds a "test" JSON Patch operation.
-     * @param path the "path" member of the operation
-     * @param value the "value" member of the operation
-     * @return this JsonPatch
-     */
-    JsonPatchBuilder test(String path, boolean value);
+    public JsonPatchBuilderImpl test(String path, boolean value) {
+        builder.add(Json.createObjectBuilder()
+                           .add("op", "test")
+                           .add("path", path)
+                           .add("value", value)
+                  );
+        return this;
+    }
 
     /**
      * Returns the patch operations in a JsonArray
      * @return the patch operations in a JsonArray
      */
-    JsonArray buildAsJsonArray();
+    public JsonArray buildAsJsonArray() {
+        return builder.build();
+    }
 
     /**
      * Returns the patch operation in a JsonPatch
      * @return the patch operation in a JsonPatch
      */
-    JsonPatch build();
+    public JsonPatch build() {
+        return new JsonPatchImpl(buildAsJsonArray());
+    }
 }
 

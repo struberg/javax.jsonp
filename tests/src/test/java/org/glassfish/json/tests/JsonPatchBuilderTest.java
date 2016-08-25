@@ -46,6 +46,7 @@ import static org.junit.Assert.assertThat;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonPatchBuilder;
+import javax.json.spi.JsonProvider;
 
 import org.junit.Test;
 
@@ -58,7 +59,7 @@ public class JsonPatchBuilderTest {
 
     @Test
     public void shouldBuildJsonPatchExpressionUsingJsonPatchBuilder() {
-        JsonPatchBuilder patchBuilder = new JsonPatchBuilder();
+        JsonPatchBuilder patchBuilder = JsonProvider.provider().createJsonPatchBuilder();
         JsonObject result = patchBuilder.add("/email", "john@example.com")
                     .replace("/age", 30)
                     .remove("/phoneNumber")

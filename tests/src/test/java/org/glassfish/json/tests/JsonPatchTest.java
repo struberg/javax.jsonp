@@ -58,6 +58,7 @@ import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
+import javax.json.spi.JsonProvider;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -127,7 +128,7 @@ public class JsonPatchTest {
     @Test
     public void shouldExecuteJsonPatchOperationsToJsonDocument() {
         try {
-            JsonPatch patch = new JsonPatch(this.patch);
+            JsonPatch patch = JsonProvider.provider().createJsonPatch(this.patch);
             JsonStructure output = patch.apply(target);
             assertThat(output, is(expected));
             assertThat(expectedException, nullValue());

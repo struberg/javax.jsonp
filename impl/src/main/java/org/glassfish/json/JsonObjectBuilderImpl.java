@@ -42,7 +42,6 @@ package org.glassfish.json;
 
 import org.glassfish.json.api.BufferPool;
 
-import javax.json.JsonArrayBuilder;
 import javax.json.*;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -341,6 +340,12 @@ class JsonObjectBuilderImpl implements JsonObjectBuilder {
         public boolean containsKey(Object key) {
             return valueMap.containsKey(key);
         }
+
+        @Override
+        public JsonArray diff(JsonStructure target) {
+            return JsonPatchImpl.diff(this, target);
+        }
+
     }
 
 }

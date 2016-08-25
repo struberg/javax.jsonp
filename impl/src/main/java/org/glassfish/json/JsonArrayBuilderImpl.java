@@ -494,6 +494,11 @@ class JsonArrayBuilderImpl implements JsonArrayBuilder {
         public JsonArray asJsonArray() {
             return this;
         }
+
+        @Override
+        public JsonArray diff(JsonStructure target) {
+            return JsonPatchImpl.diff(this, target);
+        }
     }
 }
 

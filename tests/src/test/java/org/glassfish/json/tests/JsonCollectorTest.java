@@ -43,11 +43,10 @@ package org.glassfish.json.tests;
 import org.junit.Test;
 import org.junit.BeforeClass;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import javax.json.*;
+import javax.json.spi.JsonProvider;
 import javax.json.stream.JsonCollectors;
-import java.util.List;
 
 /**
  * Some JSON query tests/examples, using Java stream operations, with JSON collectors.
@@ -154,7 +153,7 @@ public class JsonCollectorTest {
          * PatchBuilder is used for building the necessary JsonPatch.
          */
         index = -1;
-        JsonPatchBuilder builder = new JsonPatchBuilder();
+        JsonPatchBuilder builder = JsonProvider.provider().createJsonPatchBuilder();
         contacts.getValuesAs(JsonObject.class).stream()
             .peek(p->index++)
             .filter(p->p.containsKey("age"))

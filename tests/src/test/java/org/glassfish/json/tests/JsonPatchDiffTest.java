@@ -124,7 +124,7 @@ public class JsonPatchDiffTest {
     @Test
     public void shouldExecuteJsonPatchDiffOperationsToJsonDocument() {
         try {
-            JsonArray diff = JsonPatch.diff(this.original, this.target);
+            JsonArray diff = this.original.diff(this.target);
             assertThat(diff, is(expected));
             assertThat(expectedException, nullValue());
         } catch (Exception e) {

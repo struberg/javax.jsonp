@@ -58,7 +58,7 @@ import java.math.BigInteger;
 
 /**
  * Service provider for JSON processing objects.
- *
+ * <p>
  * <p>All the methods in this class are safe for use by multiple concurrent
  * threads.
  *
@@ -73,12 +73,12 @@ public abstract class JsonProvider {
     private static final String DEFAULT_PROVIDER
             = "org.glassfish.json.JsonProviderImpl";
     private static final ThreadLocal<ServiceLoader<JsonProvider>> threadLoader =
-        new ThreadLocal<ServiceLoader<JsonProvider>>() {
-            @Override
-            protected ServiceLoader<JsonProvider> initialValue() {
-                return ServiceLoader.load(JsonProvider.class);
-            }
-        };
+            new ThreadLocal<ServiceLoader<JsonProvider>>() {
+                @Override
+                protected ServiceLoader<JsonProvider> initialValue() {
+                    return ServiceLoader.load(JsonProvider.class);
+                }
+            };
 
     //Lazy initialization holder class idiom
     private static class JsonProviderHolder {
@@ -87,7 +87,7 @@ public abstract class JsonProvider {
         static JsonProvider initDefault() {
             try {
                 Class<?> clazz = Class.forName(DEFAULT_PROVIDER);
-                return (JsonProvider)clazz.newInstance();
+                return (JsonProvider) clazz.newInstance();
             } catch (ClassNotFoundException x) {
                 throw new JsonException(
                         "Provider " + DEFAULT_PROVIDER + " not found", x);
@@ -103,13 +103,12 @@ public abstract class JsonProvider {
     }
 
     /**
-     *
      * Creates a JSON provider object. The provider is loaded using the
      * {@link ServiceLoader#load(Class)} method. If there are no available
      * service providers, this method returns the default service provider.
      *
-     * @see ServiceLoader
      * @return a JSON provider
+     * @see ServiceLoader
      */
     public static JsonProvider provider() {
         Iterator<JsonProvider> it = threadLoader.get().iterator();
@@ -135,9 +134,9 @@ public abstract class JsonProvider {
      * </a>.
      *
      * @param in i/o stream from which JSON is to be read
-     * @throws JsonException if encoding cannot be determined
-     *         or i/o error (IOException would be cause of JsonException)
      * @return a JSON parser
+     * @throws JsonException if encoding cannot be determined
+     *                       or i/o error (IOException would be cause of JsonException)
      */
     public abstract JsonParser createParser(InputStream in);
 
@@ -247,7 +246,7 @@ public abstract class JsonProvider {
      *               JSON writers. The map may be empty or null
      * @return a JSON writer factory
      */
-    public abstract JsonWriterFactory createWriterFactory(Map<String,?> config);
+    public abstract JsonWriterFactory createWriterFactory(Map<String, ?> config);
 
     /**
      * Creates a reader factory for creating {@link JsonReader} objects.
@@ -259,7 +258,7 @@ public abstract class JsonProvider {
      *               JSON readers. The map may be empty or null
      * @return a JSON reader factory
      */
-    public abstract JsonReaderFactory createReaderFactory(Map<String,?> config);
+    public abstract JsonReaderFactory createReaderFactory(Map<String, ?> config);
 
     /**
      * Creates a JSON object builder
@@ -281,6 +280,7 @@ public abstract class JsonProvider {
 
     /**
      * Creates a JSON object builder, initialized with the specified Map.
+     *
      * @return a JSON objecct builder
      * @since 1.1
      */
@@ -309,6 +309,7 @@ public abstract class JsonProvider {
 
     /**
      * Creates a JSON array builder, initialized with the specified collection.
+     *
      * @param collection the initial JSON collection in builder
      * @return a JSON array builder
      * @since 1.1
@@ -328,14 +329,13 @@ public abstract class JsonProvider {
      *               JSON builders. The map may be empty or null
      * @return a JSON builder factory
      */
-    public abstract JsonBuilderFactory createBuilderFactory(Map<String,?> config);
+    public abstract JsonBuilderFactory createBuilderFactory(Map<String, ?> config);
 
     /**
      * Creates a JsonString
      *
      * @param value a JSON string
      * @return the JsonString for the string
-     *
      * @since 1.1
      */
     public JsonString createValue(String value) {
@@ -347,7 +347,6 @@ public abstract class JsonProvider {
      *
      * @param value a JSON number
      * @return the JsonNumber for the number
-     *
      * @since 1.1
      */
     public JsonNumber createValue(int value) {
@@ -359,7 +358,6 @@ public abstract class JsonProvider {
      *
      * @param value a JSON number
      * @return the JsonNumber for the number
-     *
      * @since 1.1
      */
     public JsonNumber createValue(long value) {
@@ -371,7 +369,6 @@ public abstract class JsonProvider {
      *
      * @param value a JSON number
      * @return the JsonNumber for the number
-     *
      * @since 1.1
      */
     public JsonNumber createValue(double value) {
@@ -383,7 +380,6 @@ public abstract class JsonProvider {
      *
      * @param value a JSON number
      * @return the JsonNumber for the number
-     *
      * @since 1.1
      */
     public JsonNumber createValue(BigDecimal value) {
@@ -395,10 +391,38 @@ public abstract class JsonProvider {
      *
      * @param value a JSON number
      * @return the JsonNumber for the number
-     *
      * @since 1.1
      */
     public JsonNumber createValue(BigInteger value) {
         throw new UnsupportedOperationException();
     }
+
+    /**
+     * Construct and initialize a JsonPointer.
+     *
+     * @param jsonPointer the JSON Pointer string
+     * @throws NullPointerException if {@code jsonPointer} is {@code null}
+     * @throws JsonException        if {@code jsonPointer} is not a valid JSON Pointer
+     */
+    public abstract JsonPointer createJsonPointer(String jsonPointer);
+
+    /**
+     * Constructs a JsonPatch
+     *
+     * @param patch the JSON Patch
+     */
+    public abstract JsonPatch createJsonPatch(JsonArray patch);
+
+    /**
+     * Creates a JsonPatchBuilder, starting with the specified
+     * JSON Patch
+     *
+     * @param patch the JSON Patch
+     */
+    public abstract JsonPatchBuilder createJsonPatchBuilder(JsonArray patch);
+
+    /**
+     * Creates JsonPatchBuilder with empty JSON Patch
+     */
+    public abstract JsonPatchBuilder createJsonPatchBuilder();
 }

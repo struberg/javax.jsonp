@@ -254,6 +254,26 @@ public class JsonProviderImpl extends JsonProvider {
         return new JsonBuilderFactoryImpl(pool);
     }
 
+    @Override
+    public JsonPointer createJsonPointer(String jsonPointer) {
+        return new JsonPointerImpl(jsonPointer);
+    }
+
+    @Override
+    public JsonPatch createJsonPatch(JsonArray patch) {
+        return new JsonPatchImpl(patch);
+    }
+
+    @Override
+    public JsonPatchBuilder createJsonPatchBuilder(JsonArray patch) {
+        return new JsonPatchBuilderImpl(patch);
+    }
+
+    @Override
+    public JsonPatchBuilder createJsonPatchBuilder() {
+        return new JsonPatchBuilderImpl();
+    }
+
     static boolean isPrettyPrintingEnabled(Map<String, ?> config) {
         return config.containsKey(JsonGenerator.PRETTY_PRINTING);
     }

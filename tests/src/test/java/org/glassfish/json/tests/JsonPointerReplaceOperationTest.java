@@ -54,6 +54,7 @@ import javax.json.JsonObject;
 import javax.json.JsonPointer;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
+import javax.json.spi.JsonProvider;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -96,7 +97,7 @@ public class JsonPointerReplaceOperationTest {
     @Test
     public void shouldReplaceElementsToExistingJsonDocument() {
         try {
-        JsonPointer pointer = new JsonPointer(pathOperation.getString("path"));
+        JsonPointer pointer = JsonProvider.provider().createJsonPointer(pathOperation.getString("path"));
         JsonObject modified = (JsonObject) pointer.replace(target, pathOperation.get("value"));
         assertThat(modified, is(expectedResult));
         assertThat(expectedException, nullValue());

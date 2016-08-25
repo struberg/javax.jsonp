@@ -50,6 +50,7 @@ import javax.json.JsonObject;
 import javax.json.JsonPointer;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
+import javax.json.spi.JsonProvider;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -87,7 +88,7 @@ public class JsonPointerRemoveOperationTest {
 
     @Test
     public void shouldRemoveElementsToExistingJsonDocument() {
-        JsonPointer pointer = new JsonPointer(pathOperation.getString("path"));
+        JsonPointer pointer = JsonProvider.provider().createJsonPointer(pathOperation.getString("path"));
         JsonObject modified = (JsonObject) pointer.remove(target);
         assertThat(modified, is(expectedResult));
     }

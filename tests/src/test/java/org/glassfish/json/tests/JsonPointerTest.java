@@ -56,6 +56,7 @@ import javax.json.JsonObject;
 import javax.json.JsonPointer;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
+import javax.json.spi.JsonProvider;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,25 +75,26 @@ public class JsonPointerTest {
 
     @Parameters(name = "{index}: ({0})={1}")
     public static Iterable<Object[]> data() throws Exception {
+        JsonProvider jsonProvider = JsonProvider.provider();
         rfc6901Example = JsonPointerTest.readRfc6901Example();
         return Arrays.asList(new Object[][] { 
-                 {new JsonPointer(""), rfc6901Example, null },
-                 {new JsonPointer("/foo"), rfc6901Example.getJsonArray("foo"), null},
-                 {new JsonPointer("/foo/0"), rfc6901Example.getJsonArray("foo").get(0), null},
-                 {new JsonPointer("/foo/5"), null, JsonException.class},
-                 {new JsonPointer("/p/1"), null, JsonException.class},
-                 {new JsonPointer("/"), rfc6901Example.getJsonNumber(""), null},
-                 {new JsonPointer("/a~1b"), rfc6901Example.getJsonNumber("a/b"), null},
-                 {new JsonPointer("/m~0n"), rfc6901Example.getJsonNumber("m~n"), null},
-                 {new JsonPointer("/c%d"), rfc6901Example.getJsonNumber("c%d"), null},
-                 {new JsonPointer("/e^f"), rfc6901Example.getJsonNumber("e^f"), null},
-                 {new JsonPointer("/g|h"), rfc6901Example.getJsonNumber("g|h"), null},
-                 {new JsonPointer("/i\\j"), rfc6901Example.getJsonNumber("i\\j"), null},
-                 {new JsonPointer("/k\"l"), rfc6901Example.getJsonNumber("k\"l"), null},
-                 {new JsonPointer("/ "), rfc6901Example.getJsonNumber(" "), null},
-                 {new JsonPointer("/notexists"), null, JsonException.class},
-                 {new JsonPointer("/s/t"), null, JsonException.class},
-                 {new JsonPointer("/o"), JsonObject.NULL, null}
+                 {jsonProvider.createJsonPointer(""), rfc6901Example, null },
+                 {jsonProvider.createJsonPointer("/foo"), rfc6901Example.getJsonArray("foo"), null},
+                 {jsonProvider.createJsonPointer("/foo/0"), rfc6901Example.getJsonArray("foo").get(0), null},
+                 {jsonProvider.createJsonPointer("/foo/5"), null, JsonException.class},
+                 {jsonProvider.createJsonPointer("/p/1"), null, JsonException.class},
+                 {jsonProvider.createJsonPointer("/"), rfc6901Example.getJsonNumber(""), null},
+                 {jsonProvider.createJsonPointer("/a~1b"), rfc6901Example.getJsonNumber("a/b"), null},
+                 {jsonProvider.createJsonPointer("/m~0n"), rfc6901Example.getJsonNumber("m~n"), null},
+                 {jsonProvider.createJsonPointer("/c%d"), rfc6901Example.getJsonNumber("c%d"), null},
+                 {jsonProvider.createJsonPointer("/e^f"), rfc6901Example.getJsonNumber("e^f"), null},
+                 {jsonProvider.createJsonPointer("/g|h"), rfc6901Example.getJsonNumber("g|h"), null},
+                 {jsonProvider.createJsonPointer("/i\\j"), rfc6901Example.getJsonNumber("i\\j"), null},
+                 {jsonProvider.createJsonPointer("/k\"l"), rfc6901Example.getJsonNumber("k\"l"), null},
+                 {jsonProvider.createJsonPointer("/ "), rfc6901Example.getJsonNumber(" "), null},
+                 {jsonProvider.createJsonPointer("/notexists"), null, JsonException.class},
+                 {jsonProvider.createJsonPointer("/s/t"), null, JsonException.class},
+                 {jsonProvider.createJsonPointer("/o"), JsonObject.NULL, null}
            });
     }
 

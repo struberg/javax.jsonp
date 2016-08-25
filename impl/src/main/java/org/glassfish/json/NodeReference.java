@@ -37,7 +37,15 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package javax.json;
+package org.glassfish.json;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonException;
+import javax.json.JsonObject;
+import javax.json.JsonStructure;
+import javax.json.JsonValue;
 
 /**
  * This class is a helper class for JsonPointer implementation,

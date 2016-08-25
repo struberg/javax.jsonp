@@ -40,6 +40,8 @@
 
 package javax.json;
 
+import javax.json.spi.JsonProvider;
+
 /**
  * Super type for the two structured types in JSON ({@link JsonObject object}s
  * and {@link JsonArray array}s).
@@ -55,7 +57,15 @@ public interface JsonStructure extends JsonValue {
      *     
      * @since 1.1
      */
-    default public JsonValue getValue(String jsonPointer) {
-        return new JsonPointer(jsonPointer).getValue(this);
+    default JsonValue getValue(String jsonPointer) {
+        return JsonProvider.provider().createJsonPointer(jsonPointer).getValue(this);
     }
+
+    /**
+     * Generates a JSON Patch between the current JsonStructure and the target {@code JsonStructure}.
+     * The generated JSON Patch need not be unique.
+     * @param target the target, must be the same type as the current JsonStructure
+     * @return a JSON Patch which when applied to the source, yields the target
+     */
+    JsonArray diff(JsonStructure target);
 }
